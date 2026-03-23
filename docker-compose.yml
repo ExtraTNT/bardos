@@ -1,0 +1,13 @@
+services:
+  bardos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bardos
+    ports:
+      - "3443:3443"
+    volumes:
+      # Keep editable content mounted from host into the same app root dir in container
+      - ./backend/pages:/app/pages
+      - ./backend/images:/app/images
+      - ./backend/.dev-cert:/app/.dev-cert

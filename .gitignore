@@ -1,0 +1,35 @@
+# Node / frontend
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment / local config
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Haskell / Cabal
+backend/dist-newstyle/
+backend/.ghc.environment.*
+backend/*.hi
+backend/*.o
+backend/**/*.hi
+backend/**/*.o
+backend/.cabal-sandbox/
+backend/cabal.project.local
+backend/cabal.project.local~
+
+# Runtime artifacts
+backend/.dev-cert/
+backend/images/_index.json
+
+# Coverage / reports
+coverage/
+*.prof
+*.eventlog
