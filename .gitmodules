@@ -1,0 +1,3 @@
+[submodule "lib/odocosJS"]
+	path = lib/odocosJS
+	url = https://github.com/ExtraTNT/odocosJS
