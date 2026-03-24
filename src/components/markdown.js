@@ -86,28 +86,27 @@ const inlineImage = text =>
         })
     ))));
 
-const inlineLink = text =>
-    bind(guard(eq(text[0])('['))(1))(s =>
-    bind(findClose(']')(s)(text))(le =>
-    bind(guard(eq(text[le + 1])('('))(le + 2))(hs =>
-    bind(findClose(')')(hs)(text))(he =>
+const inlineLink = (text) =>
+    bind(guard(eq(text[0])("["))(1))            (s =>
+    bind(findClose("]")(s)(text))               (le =>
+    bind(guard(eq(text[le + 1])("("))(le + 2))  (hs =>
+    bind(findClose(")")(hs)(text))              (he =>
         Just({
             nodes: [
-                a({ href: text.slice(hs, he) })
-                    (parseInline(text.slice(1, le)))
+                a({ href: text.slice(hs, he) })(parseInline(text.slice(1, le))),
             ],
             rest: text.slice(he + 1),
-        })
-    ))));
+          })
+    ))))
 
-const inlineCode = text =>
-    bind(guard(eq(text[0])('`'))(1))(s =>
-    bind(findClose('`')(s)(text))(end =>
+const inlineCode = (text) =>
+    bind(guard(eq(text[0])("`"))(1))((s) =>
+    bind(findClose("`")(s)(text))((end) =>
         Just({
             nodes: [code([text.slice(s, end)])],
             rest: text.slice(end + 1),
-        })
-    ));
+      })
+    ))
 
 const inlineBold = text =>
     bind(guard(text.startsWith('**') || text.startsWith('__'))

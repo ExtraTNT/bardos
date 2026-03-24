@@ -12,6 +12,7 @@ import { markdownToVnode } from './markdown.js';
 
 const bind = ma => f => ma(_ => Nothing)(f);
 const fromMaybe = d => m => m(_ => d)(x => x);
+const orElse = ma => mb => ma(_ => mb)(x => Just(x));
 
 // ---------------------------------------------------------------------------
 // State — plain immutable value, replaced wholesale at the effect boundary
@@ -70,19 +71,23 @@ const mergeDeep = entries => parent => state =>
 // resolve :: State -> String -> String | null
 // Pure path resolution: page > folder default child > first child
 // ---------------------------------------------------------------------------
-const resolve = state => hash =>
-  toMaybe(state.pages[hash])
-    (() => toMaybe(state.folders[hash] || state.subNavs[hash] ? hash : null)
-      (() => null)
-      (folder => {
-        const defPath = folder + '/' + folder.split('/').pop();
-        return toMaybe(state.pages[defPath])
-          (() => toMaybe(((state.subNavs[folder] || [])[0] || {}).path)
-            (() => null)
-            (p => p))
-          (() => defPath);
-      }))
-    (() => hash);
+const resolve = state => hash => 
+  fromMaybe(hash)(
+    orElse(
+      bind(toMaybe(state.pages[hash]))(_ => Just(hash))
+    )(
+      bind(toMaybe(state.folders[hash] || state.subNavs[hash] ? hash : null))(
+        folder => {
+          const defPath = folder + '/' + folder.split('/').pop();
+          return orElse(
+            bind(toMaybe(state.pages[defPath]))(_ => Just(defPath))
+          )(
+            toMaybe(((state.subNavs[folder] || [])[0] || {}).path)
+          );
+        }
+      )
+    )
+  );
 
 // firstPath :: State -> String
 const firstPath = state => state.topNav[0] ? state.topNav[0].path : '';
@@ -92,8 +97,8 @@ const firstPath = state => state.topNav[0] ? state.topNav[0].path : '';
 // ---------------------------------------------------------------------------
 
 // navLink :: String -> String -> Bool -> VNode
-const navLink = path => title => active =>
-  elp('a')({ href: '#' + path, className: active ? 'active' : '' })([title]);
+const navLink = (path) => (title) => (active) =>
+  vnode("a")({ href: "#" + path, className: active ? "active" : "" })([title])
 
 // isActiveTop :: String -> { path, type } -> Bool
 const isActiveTop = cur => entry =>

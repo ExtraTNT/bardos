@@ -25,7 +25,7 @@ ensureTlsFiles _ _ = do
 
 generateDevCert :: IO ()
 generateDevCert = do
-  putStrLn "[tls] Generating self-signed dev certificate …"
+  putStrLn "[tls] Generating self-signed dev certificate ..."
   createDirectoryIfMissing True (takeDirectory devCertPath)
   callProcess "openssl"
     [ "req", "-x509", "-newkey", "rsa:2048"

@@ -1,7 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Api
-  ( apiApp
-  ) where
+module Api ( apiApp ) where
 
 import Network.Wai            (Application, responseLBS, pathInfo)
 import Network.HTTP.Types     (status200, status404, hContentType)

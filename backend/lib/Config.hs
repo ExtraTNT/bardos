@@ -1,7 +1,4 @@
-module Config
-  ( AppConfig(..)
-  , parseConfig
-  ) where
+module Config ( AppConfig(..), parseConfig) where
 
 import Options.Applicative
 

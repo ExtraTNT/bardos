@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE LambdaCase #-}
 module Images
   ( ImageEntry(..)
   , scanImages
@@ -44,7 +45,7 @@ walkDir :: FilePath -> String -> IO [ImageEntry]
 walkDir base rel = do
   let dir = if null rel then base else base </> rel
   items <- sort <$> listDirectory dir
-  let valid = filter (\n -> not (isPrefixOf "." n) && n /= "_index.json") items
+  let valid = filter (\n -> not ("." `isPrefixOf` n) && n /= "_index.json") items
   concat <$> mapM (processItem base rel) valid
 
 processItem :: FilePath -> String -> String -> IO [ImageEntry]
@@ -60,21 +61,34 @@ processItem base rel name = do
         sz <- getFileSize full
         pure [ImageEntry name rp sz m]
 
+
 -- | Serve a single image file. Validates path to prevent traversal.
 serveImage :: FilePath -> [T.Text] -> Application
 serveImage baseDir segments _req respond = do
   let parts = map T.unpack segments
-  if any (\s -> s == ".." || s == "." || '/' `elem` s || '\\' `elem` s) parts
-    then respond $ responseLBS status404 [] "not found"
-    else do
-      let path = foldl (</>) baseDir parts
+
+  case validate parts of
+    Nothing -> respond notFound
+    Just ps -> do
+      let path = foldl (</>) baseDir ps
       exists <- doesFileExist path
       if not exists
-        then respond $ responseLBS status404 [] "not found"
-        else do
-          let ext  = takeExtension (last parts)
-              mime = maybe "application/octet-stream" BS8.pack (mimeForExt ext)
-          respond $ responseFile status200 [(hContentType, mime)] path Nothing
+        then respond notFound
+        else respond (okResponse ps path)
+  where
+    validate ps
+      | any invalid ps = Nothing
+      | otherwise      = Just ps
+    invalid s =
+         s == ".."
+      || s == "."
+      || '/'  `elem` s
+      || '\\' `elem` s
+    notFound = responseLBS status404 [] "not found"
+    okResponse ps path =
+      let ext = takeExtension (last ps)
+          mime = maybe "application/octet-stream" BS8.pack (mimeForExt ext)
+      in responseFile status200 [(hContentType, mime)] path Nothing
 
 mimeForExt :: String -> Maybe String
 mimeForExt ".png"  = Just "image/png"

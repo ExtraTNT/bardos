@@ -35,26 +35,31 @@ instance ToJSON PageEntry where
 scanPagesShallow :: FilePath -> IO [PageEntry]
 scanPagesShallow dir = do
   entries <- sort <$> listDirectory dir
-  let valid = filter (not . isPrefixOf ".") entries
-  (dirs, files) <- partitionM (doesDirectoryExist . (dir </>)) valid
-  let mdFiles = filter (\f -> takeExtension f == ".md") files
-  pages   <- mapM (mkPage dir) mdFiles
-  let folders = map mkFolder dirs
-  pure (pages ++ folders)
+  (dirs, files) <- partitionM
+    (doesDirectoryExist . (dir </>))
+    (filter (not . isPrefixOf ".") entries)
+  pages   <- mapM (mkPage dir) (filter (\f -> takeExtension f == ".md") files)
+  pure (pages ++ map mkFolder dirs)
 
 -- | Resolve a sub-path and scan it shallowly.
 --   Returns Nothing if the path escapes the base or doesn't exist.
 scanPagesAt :: FilePath -> [T.Text] -> IO (Maybe [PageEntry])
-scanPagesAt baseDir segments = do
-  let parts = map T.unpack segments
-  if any (\s -> s == ".." || s == "." || '/' `elem` s || '\\' `elem` s) parts
-    then pure Nothing
-    else do
-      let target = foldl (</>) baseDir parts
+scanPagesAt baseDir segments
+  | any invalid parts = pure Nothing
+  | otherwise = do
       exists <- doesDirectoryExist target
       if exists
         then Just <$> scanPagesShallow target
         else pure Nothing
+      where
+        target :: FilePath
+        target = foldl (</>) baseDir parts
+        parts = map T.unpack segments
+        invalid s =
+           s == ".."
+          || s == "."
+          || '/'  `elem` s
+          || '\\' `elem` s
 
 mkPage :: FilePath -> FilePath -> IO PageEntry
 mkPage dir file = do

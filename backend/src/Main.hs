@@ -1,12 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import Network.Wai                (Application, pathInfo, rawPathInfo)
-import Network.Wai.Handler.Warp   (defaultSettings, setPort, setLogger)
-import Network.Wai.Handler.WarpTLS(runTLS, tlsSettings)
-import Network.Wai.Application.Static
-    (staticApp, defaultWebAppSettings)
-import WaiAppStatic.Types          (ssIndices, unsafeToPiece)
+import Network.Wai                    (Application, pathInfo, rawPathInfo)
+import Network.Wai.Handler.Warp       (defaultSettings, setPort, setLogger)
+import Network.Wai.Handler.WarpTLS    (runTLS, tlsSettings)
+import Network.Wai.Application.Static (staticApp, defaultWebAppSettings)
+import WaiAppStatic.Types             (ssIndices, unsafeToPiece)
 
 import qualified Data.ByteString.Char8 as BS8
 

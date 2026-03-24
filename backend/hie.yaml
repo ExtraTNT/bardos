@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "./src"
+      component: "bardosBackend:exe:bardosBackend"
+
+    - path: "./lib"
+      component: "bardosBackend:lib:bardosBackend"
