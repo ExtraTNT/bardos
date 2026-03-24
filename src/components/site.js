@@ -156,7 +156,9 @@ const siteView = state => cur => {
     topNavView(state)(cur),
     ...(sub ? [sub] : []),
     vnode('main')({ className: 'site-content' })([contentView(state)(cur)]),
-    vnode('footer')({ className: 'site-footer' })(['Built with BardosJS, a minimalist CMS based on OdocosJS.']),
+    vnode('footer')({ className: 'site-footer' })([
+      vnode('span')({ className: 'site-footer-text' })([`© ${new Date().getFullYear()} - Powered by BardosJS`]),
+    ]),
   ]);
 };
 

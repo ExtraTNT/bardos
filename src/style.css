@@ -22,11 +22,14 @@ body {
   left: 0;
   width:100%;
   height:fit-content;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   background: #f0f0f0;
+}
+.site-footer-text {
+  font-size: 0.9rem;
+  color: #555;
+  padding: 8px 12px;
 }
 .site-nav {
   display: flex;
