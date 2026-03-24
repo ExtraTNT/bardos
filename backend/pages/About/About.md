@@ -1,6 +1,6 @@
 # About Bardos
 
-This site is powered by **odocosJS** — a small functional virtual-DOM library.
+This site is powered by **odocosJS** — a small functional JS library supporting a virtual DOM.
 
 The markdown parser converts text into virtual nodes, which the render engine
 patches into the real DOM.

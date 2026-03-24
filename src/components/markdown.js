@@ -100,8 +100,8 @@ const inlineLink = (text) =>
     ))))
 
 const inlineCode = (text) =>
-    bind(guard(eq(text[0])("`"))(1))((s) =>
-    bind(findClose("`")(s)(text))((end) =>
+    bind(guard(eq(text[0])("`"))(1))    (s =>
+    bind(findClose("`")(s)(text))       (end =>
         Just({
             nodes: [code([text.slice(s, end)])],
             rest: text.slice(end + 1),

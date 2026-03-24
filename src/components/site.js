@@ -141,9 +141,7 @@ const subNavView = state => cur =>
             navLink(s.path)(s.title)(isActiveSub(cur)(s))
           ),
         ]))
-      )
-    )
-  );
+    )));
 
 // contentView :: State -> String -> VNode
 const contentView = state => cur =>
@@ -158,6 +156,7 @@ const siteView = state => cur => {
     topNavView(state)(cur),
     ...(sub ? [sub] : []),
     vnode('main')({ className: 'site-content' })([contentView(state)(cur)]),
+    vnode('footer')({ className: 'site-footer' })(['Built with BardosJS, a minimalist CMS based on OdocosJS.']),
   ]);
 };
 

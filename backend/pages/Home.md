@@ -2,6 +2,8 @@
 
 A tiny **markdown-driven** website rendered with [odocosJS](https://github.com/ExtraTNT/odocosJs).
 
+Laxscit in cridiíobi budinas bardon. Immos riíi, Immos bardos
+
 ---
 
 ## Features
