@@ -47,5 +47,5 @@ COPY backend/images /app/images
 
 EXPOSE 3443
 
-# Serve dist over HTTPS with pages/images API folders.
+# Serve dist over HTTPS with pages/images API directories.
 CMD ["/app/bardosBackend", "dist", "--pages", "pages", "--images", "images", "--port", "3443"]

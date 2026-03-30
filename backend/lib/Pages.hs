@@ -12,7 +12,7 @@ import System.FilePath   ((</>), dropExtension, takeExtension)
 import qualified Data.Text    as T
 import qualified Data.Text.IO as TIO
 
--- | A single-level entry: either a page with content or a folder stub.
+-- | A single-level entry: either a page with content or a directory stub.
 data PageEntry
   = PageEntry   { peTitle :: String, pePath :: String, peContent :: T.Text }
   | FolderEntry { feTitle :: String, fePath :: String }
@@ -31,7 +31,7 @@ instance ToJSON PageEntry where
     , "path"  .= p
     ]
 
--- | Scan a single level — pages get content, folders are stubs (no children).
+-- | Scan a single level — pages get content, directories are stubs (no children).
 scanPagesShallow :: FilePath -> IO [PageEntry]
 scanPagesShallow dir = do
   entries <- sort <$> listDirectory dir

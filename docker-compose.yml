@@ -11,3 +11,4 @@ services:
       - ./backend/pages:/app/pages
       - ./backend/images:/app/images
       - ./backend/.dev-cert:/app/.dev-cert
+      - ./dist:/app/dist

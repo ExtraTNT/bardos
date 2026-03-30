@@ -22,7 +22,7 @@ apiApp pagesDir imagesDir req respond =
       entries <- scanPagesShallow pagesDir
       respond $ jsonResponse status200 (toJSON entries)
 
-    -- GET /api/pages/<path...> — subfolder (shallow)
+    -- GET /api/pages/<path...> — subdirectory (shallow)
     ("pages" : rest) | not (null rest) -> do
       result <- scanPagesAt pagesDir rest
       case result of
